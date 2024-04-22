@@ -1,0 +1,5 @@
+<searchAgents.PositionSearchProblem object at 0x105001510>
+(5, 5)
+['South', 'West']
+(5, 4)
+(4, 5)

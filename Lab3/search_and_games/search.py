@@ -129,6 +129,50 @@ def breadthFirstSearch(problem):
     You are not required to implement this, but you may find it useful for Q5.
     """
     "*** YOUR CODE HERE ***"
+
+
+    """
+    with open("test.txt", "w") as f:
+        print(problem.getStartState(), file = f)
+        print(problem.getActions(problem.getStartState()), file = f)
+        for x in problem.getActions(problem.getStartState()):
+            print(problem.getResult(problem.getStartState(), x), file = f)"""
+
+    
+    ordervisited = []
+    frontier = util.Queue()
+    frontier.push(problem.getStartState())
+
+    while not frontier.isEmpty():
+        n = frontier.pop()
+        ordervisited.append(n)
+        for x in problem.getActions(n):
+            if problem.goalTest(problem.getResult(n, x)):
+                return problem.getResult(n, x) 
+            frontier.push(problem.getResult(problem.getStartState(), x))
+
+
+    return None
+    """
+    while not frontier.isEmpty():
+        n = Node() 
+        n = frontier.pop()
+        ordervisited.append(n)
+        if problem.goalTest(n.state):
+            print(ordervisited)
+            return n
+        for x in problem.getActions(n):
+            #make the getactions thing a . node and push that 
+            frontier.push(Node(x.state, n, x, 0))"""
+    
+    #print(ordervisited)
+    #return None
+    """    
+    #put nodes in a visited array and put its children(if they exist in a queue)
+    #run bfs on the first titem in the queue
+    #find out how o do the queue so that it doesnt reset(dont know how that woeks with python)
+    #maybe put the a print for every visited item 
+    """
     util.raiseNotDefined()
     
 def depthFirstSearch(problem): 
@@ -175,6 +219,7 @@ def UniformCostSearch(problem):
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
+
     util.raiseNotDefined()
 
 # Abbreviations
