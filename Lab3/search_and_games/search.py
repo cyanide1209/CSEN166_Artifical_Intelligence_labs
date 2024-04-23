@@ -129,50 +129,42 @@ def breadthFirstSearch(problem):
     You are not required to implement this, but you may find it useful for Q5.
     """
     "*** YOUR CODE HERE ***"
-
-
-    """
-    with open("test.txt", "w") as f:
-        print(problem.getStartState(), file = f)
-        print(problem.getActions(problem.getStartState()), file = f)
-        for x in problem.getActions(problem.getStartState()):
-            print(problem.getResult(problem.getStartState(), x), file = f)"""
-
     
-    ordervisited = []
+    finalactions = []
     frontier = util.Queue()
-    frontier.push(problem.getStartState())
+    frontier.push(Node(problem.getStartState(), None, None, 0))
+    visitedNodes = []
+    loop = False
 
     while not frontier.isEmpty():
         n = frontier.pop()
-        ordervisited.append(n)
-        for x in problem.getActions(n):
-            if problem.goalTest(problem.getResult(n, x)):
-                return problem.getResult(n, x) 
-            frontier.push(problem.getResult(problem.getStartState(), x))
+        visitedNodes.append(n.state)
+        for x in problem.getActions(n.state):
+            #checking if is a visited node
+            for y in visitedNodes:
+                if problem.getResult(n.state, x) == y:
+                    loop = True
+                    break
+            if loop:
+                loop = False
+                continue
 
+            if problem.goalTest(problem.getResult(n.state, x)):
+                visitedNodes.append(problem.getResult(n.state, x))
+                finalactions.append(x)
+                while n.parent.state != problem.getStartState():
+                    finalactions.insert(0,n.action)
+                    n = n.parent
+                #do one more for the first action, for some reason cannot make the loop end at none
+                finalactions.insert(0,n.action)
+                with open("test.txt", "w") as f: 
+                    print(visitedNodes, file = f)
+                return finalactions
+            else:
+                frontier.push(Node(problem.getResult(n.state, x),n,x,0))
 
-    return None
-    """
-    while not frontier.isEmpty():
-        n = Node() 
-        n = frontier.pop()
-        ordervisited.append(n)
-        if problem.goalTest(n.state):
-            print(ordervisited)
-            return n
-        for x in problem.getActions(n):
-            #make the getactions thing a . node and push that 
-            frontier.push(Node(x.state, n, x, 0))"""
     
-    #print(ordervisited)
-    #return None
-    """    
-    #put nodes in a visited array and put its children(if they exist in a queue)
-    #run bfs on the first titem in the queue
-    #find out how o do the queue so that it doesnt reset(dont know how that woeks with python)
-    #maybe put the a print for every visited item 
-    """
+    return None
     util.raiseNotDefined()
     
 def depthFirstSearch(problem): 
