@@ -148,7 +148,7 @@ def breadthFirstSearch(problem):
             if loop:
                 loop = False
                 continue
-
+            #check if is at goal
             if problem.goalTest(problem.getResult(n.state, x)):
                 visitedNodes.append(problem.getResult(n.state, x))
                 finalactions.append(x)
@@ -160,6 +160,7 @@ def breadthFirstSearch(problem):
                 with open("test.txt", "w") as f: 
                     print(visitedNodes, file = f)
                 return finalactions
+            #else push children to frontier
             else:
                 frontier.push(Node(problem.getResult(n.state, x),n,x,0))
 
@@ -211,7 +212,42 @@ def UniformCostSearch(problem):
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
+    finalactions = []
+    frontier = util.PriorityQueue()
+    frontier.push(Node(problem.getStartState(), None, None, 0), 0)
+    visitedNodes = []
+    loop = False
 
+    while not frontier.isEmpty():
+        n = frontier.pop()
+        visitedNodes.append(n.state)
+        for x in problem.getActions(n.state):
+            #checking if is a visited node
+            for y in visitedNodes:
+                if problem.getResult(n.state, x) == y:
+                    loop = True
+                    break
+            if loop:
+                loop = False
+                continue
+            #check if is at goal
+            if problem.goalTest(problem.getResult(n.state, x)):
+                visitedNodes.append(problem.getResult(n.state, x))
+                finalactions.append(x)
+                while n.parent.state != problem.getStartState():
+                    finalactions.insert(0,n.action)
+                    n = n.parent
+                #do one more for the first action, for some reason cannot make the loop end at none
+                finalactions.insert(0,n.action)
+                with open("test.txt", "w") as f: 
+                    print(visitedNodes, file = f)
+                return finalactions
+            #else push children to frontier
+            else:
+                frontier.push(Node(problem.getResult(n.state, x),n,x,problem.getCost(n.state, x) + heuristic(problem.getResult(n.state, x), problem)), problem.getCost(n.state, x) + heuristic(problem.getResult(n.state, x), problem) )
+
+    
+    return None
     util.raiseNotDefined()
 
 # Abbreviations
