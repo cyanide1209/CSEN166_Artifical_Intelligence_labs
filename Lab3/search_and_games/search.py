@@ -217,6 +217,7 @@ def aStarSearch(problem, heuristic=nullHeuristic):
     frontier.push(Node(problem.getStartState(), None, None, 0), 0)
     visitedNodes = []
     loop = False
+    notfirst = False
 
     while not frontier.isEmpty():
         n = frontier.pop()
@@ -244,7 +245,11 @@ def aStarSearch(problem, heuristic=nullHeuristic):
                 return finalactions
             #else push children to frontier
             else:
-                frontier.push(Node(problem.getResult(n.state, x),n,x,problem.getCost(n.state, x) + heuristic(problem.getResult(n.state, x), problem)), problem.getCost(n.state, x) + heuristic(problem.getResult(n.state, x), problem) )
+                if notfirst:
+                    frontier.push(Node(problem.getResult(n.state, x),n,x,n.parent.path_cost+problem.getCost(n.state,n.action)), n.parent.path_cost+problem.getCost(n.state,n.action) + heuristic(problem.getResult(n.state, x), problem))
+                else:
+                    frontier.push(Node(problem.getResult(n.state, x),n,x,problem.getCost(n.state, x)), problem.getCost(n.state, x) + heuristic(problem.getResult(n.state, x), problem) )
+                notfirst = True
 
     
     return None
