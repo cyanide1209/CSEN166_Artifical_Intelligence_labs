@@ -245,11 +245,7 @@ def aStarSearch(problem, heuristic=nullHeuristic):
                 return finalactions
             #else push children to frontier
             else:
-                if notfirst:
-                    frontier.push(Node(problem.getResult(n.state, x),n,x,n.parent.path_cost+problem.getCost(n.state,n.action)), n.parent.path_cost+problem.getCost(n.state,n.action) + heuristic(problem.getResult(n.state, x), problem))
-                else:
-                    frontier.push(Node(problem.getResult(n.state, x),n,x,problem.getCost(n.state, x)), problem.getCost(n.state, x) + heuristic(problem.getResult(n.state, x), problem) )
-                notfirst = True
+               frontier.push(Node(problem.getResult(n.state, x),n,x,n.path_cost+problem.getCost(n.state,x)), n.path_cost+problem.getCost(n.state,x) + heuristic(problem.getResult(n.state, x), problem))
 
     
     return None
