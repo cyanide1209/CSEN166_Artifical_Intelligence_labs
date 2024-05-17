@@ -135,10 +135,43 @@ class MinimaxAgent(MultiAgentSearchAgent):
         Returns whether or not the game state is a losing state
         """
         "*** YOUR CODE HERE ***"
-
-        return([left, right, up, down][max_index])
-
+        max(gameState, 0, 1, self.depth)
         util.raiseNotDefined()
+
+    def max(state, index, cur_depth, max_depth):
+        actions = state.getLegalActions(index)
+        optimalvalue = -sys.maxsize-1
+        optimalaction = ""
+        if actions.isEmpty():
+            return scoreEvaluationFunction(state)
+        else:
+            for action in actions:
+                x = min(new_state, index+1, cur_depth+1, max_depth)
+                if x > optimalvalue:
+                    optimalvalue = x
+                    optimalaction = action
+        if depth == 1:
+            return optimalaction
+        else:
+            return optimalvalue
+    
+    def min(state, index, cur_depth, max_depth):
+        actions = state.getLegalActions(index)
+        if actions.isEmpty():
+            return scoreEvaluationFunction(state)
+
+        else:
+            for action in actions:
+                new_state = state.generateSuccessor(index, action)
+                if(index == state.getNumAgents()-1): #if its the last turn of the last ghost
+                    if cur_depth == max_depth: #AND its the last turn of the last ghost then return the score
+                        return scoreEvaluationFunction(new_state)
+                    else: #if its the last ghost but not the last turn then pacman's turn, so call the max function
+                        max(new_state, 0, cur_depth+1, max_depth)
+                else: #if its not the last ghost then the next ghost should play, thus call the min function
+                    min(new_state, index+1, cur_depth+1, max_depth)
+                    
+
 
 class AlphaBetaAgent(MultiAgentSearchAgent):
     """
