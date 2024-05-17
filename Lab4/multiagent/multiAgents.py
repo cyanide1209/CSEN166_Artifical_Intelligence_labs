@@ -17,6 +17,7 @@ from game import Directions
 import random, util
 
 from game import Agent
+import sys
 
 class ReflexAgent(Agent):
     """
@@ -135,41 +136,41 @@ class MinimaxAgent(MultiAgentSearchAgent):
         Returns whether or not the game state is a losing state
         """
         "*** YOUR CODE HERE ***"
-        max(gameState, 0, 1, self.depth)
+        return MinimaxAgent.maxi(gameState, 1, self.depth)
         util.raiseNotDefined()
 
-    def max(state, index, cur_depth, max_depth):
-        actions = state.getLegalActions(index)
+    def maxi(state, cur_depth, max_depth):
+        actions = state.getLegalActions(0)
         optimalvalue = -sys.maxsize-1
         optimalaction = ""
-        if actions.isEmpty():
+        if not actions:
             return scoreEvaluationFunction(state)
         else:
             for action in actions:
-                x = min(new_state, index+1, cur_depth+1, max_depth)
+                x = MinimaxAgent.mini(state.generateSuccessor(0,action), 1, cur_depth, max_depth)
                 if x > optimalvalue:
                     optimalvalue = x
                     optimalaction = action
-        if depth == 1:
+        if cur_depth == 1:
             return optimalaction
         else:
             return optimalvalue
     
-    def min(state, index, cur_depth, max_depth):
+    def mini(state, index, cur_depth, max_depth):
         actions = state.getLegalActions(index)
-        if actions.isEmpty():
+        path = []
+        if not actions:
             return scoreEvaluationFunction(state)
-
-        else:
+        else: #if there are actions to be taken
             for action in actions:
-                new_state = state.generateSuccessor(index, action)
-                if(index == state.getNumAgents()-1): #if its the last turn of the last ghost
+                if(index == state.getNumAgents()-1): #if its the last ghost of the ghosts
                     if cur_depth == max_depth: #AND its the last turn of the last ghost then return the score
-                        return scoreEvaluationFunction(new_state)
-                    else: #if its the last ghost but not the last turn then pacman's turn, so call the max function
-                        max(new_state, 0, cur_depth+1, max_depth)
+                        path.append(scoreEvaluationFunction(state.generateSuccessor(index,action)))
+                    else: #if its the last ghost but not the last turn then its pacman's turn, so call the max function
+                        path.append(MinimaxAgent.maxi(state.generateSuccessor(index,action), cur_depth + 1, max_depth))
                 else: #if its not the last ghost then the next ghost should play, thus call the min function
-                    min(new_state, index+1, cur_depth+1, max_depth)
+                    path.append(MinimaxAgent.mini(state.generateSuccessor(index,action), index + 1, cur_depth, max_depth))
+        return min(path)
                     
 
 
