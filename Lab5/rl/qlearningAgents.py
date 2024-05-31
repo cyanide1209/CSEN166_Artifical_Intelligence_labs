@@ -134,8 +134,6 @@ class QLearningAgent(ReinforcementAgent):
             return self.computeActionFromQValues(state)
         util.raiseNotDefined()
 
-        return action
-
     def update(self, state, action, nextState, reward):
         """
           The parent class calls this to observe a
