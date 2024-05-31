@@ -71,7 +71,9 @@ class QLearningAgent(ReinforcementAgent):
             test = 0 # just for testing
             # update the dictionary self.qvalues with this unseen (s,a) and initialize its value as 0.0
             # self.qvalues[(s,a)]=0.0
-            # return this q-value     
+            # return this q-value 
+            self.qvalues[(state,action): 0.0]
+            return self.qvalues[(state,action)] 
             
 
     def computeValueFromQValues(self, state):
