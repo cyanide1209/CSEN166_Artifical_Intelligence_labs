@@ -84,6 +84,11 @@ class QLearningAgent(ReinforcementAgent):
           terminal state, you should return a value of 0.0.
         """
         "*** YOUR CODE HERE ***"
+        for action in self.getLegalActions(state):
+            if self.getQValue(state, action) == 0.0:
+                return 0.0
+            else:
+                return max(self.getQValue(state, action))
         util.raiseNotDefined()
 
     def computeActionFromQValues(self, state):
@@ -94,6 +99,19 @@ class QLearningAgent(ReinforcementAgent):
         """
         "*** YOUR CODE HERE ***"
         # YL: if there are multiple best actions, then choose a random one
+        bestActions= []
+        bestVal = float('-inf')
+        for action in self.getLegalActions(state):
+            Qvalue = self.getQValue(state, action)
+            if Qvalue > best_val:
+                bestActions = [action]
+                bestVal = Qvalue
+            elif Qvalue == bestVal:
+                bestActions.append(action)
+        if len(bestActions) == 0:
+            return None
+        else:
+            return random.choice(bestActions)
         util.raiseNotDefined()
 
     def getAction(self, state):
@@ -108,8 +126,12 @@ class QLearningAgent(ReinforcementAgent):
         """
         # Pick Action
         legalActions = self.getLegalActions(state)
-        action = None
+        
         "*** YOUR CODE HERE ***"
+        if util.flipCoin(self.epsilon):
+            return random.choice(legalActions)
+        else:
+            return self.computeActionFromQValues(state)
         util.raiseNotDefined()
 
         return action
@@ -123,6 +145,9 @@ class QLearningAgent(ReinforcementAgent):
           it will be called on your behalf
         """
         "*** YOUR CODE HERE ***"
+        sample = reward + self.discount* self.computeValueFromQValues(nextState)
+        self.qvalues[(state,action)] = (1-self.alpha)*self.getQValue(state,action) + self.alpha*sample
+
         #util.raiseNotDefined()
         
         # self.qvalues[(state,action)] = ...
