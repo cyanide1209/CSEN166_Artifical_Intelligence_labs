@@ -84,6 +84,7 @@ class QLearningAgent(ReinforcementAgent):
           terminal state, you should return a value of 0.0.
         """
         "*** YOUR CODE HERE ***"
+<<<<<<< HEAD
         max_val = 0.0
         for action in self.getLegalActions(state):
             if self.getQValue(state, action) == 0.0:
@@ -94,6 +95,13 @@ class QLearningAgent(ReinforcementAgent):
                 
         return max_val
         util.raiseNotDefined()
+=======
+        if len(self.getLegalActions(state)) == 0: return 0.0
+        vals = []
+        for action in self.getLegalActions(state):
+            vals.append(self.getQValue(state,action))
+        return max(vals)
+>>>>>>> 23a70d973a16e5af3a5018721eba1dc90323e662
 
     def computeActionFromQValues(self, state):
         """
@@ -103,19 +111,17 @@ class QLearningAgent(ReinforcementAgent):
         """
         "*** YOUR CODE HERE ***"
         # YL: if there are multiple best actions, then choose a random one
+        if len(self.getLegalActions(state)) == 0: return None
         bestActions= []
         bestVal = float('-inf')
         for action in self.getLegalActions(state):
             Qvalue = self.getQValue(state, action)
-            if Qvalue > best_val:
+            if Qvalue > bestVal:
                 bestActions = [action]
                 bestVal = Qvalue
             elif Qvalue == bestVal:
                 bestActions.append(action)
-        if len(bestActions) == 0:
-            return None
-        else:
-            return random.choice(bestActions)
+        return random.choice(bestActions)
         util.raiseNotDefined()
 
     def getAction(self, state):
@@ -147,7 +153,7 @@ class QLearningAgent(ReinforcementAgent):
           it will be called on your behalf
         """
         "*** YOUR CODE HERE ***"
-        sample = reward + self.discount* self.computeValueFromQValues(nextState)
+        sample = reward + self.discount * self.computeValueFromQValues(nextState)
         self.qvalues[(state,action)] = (1-self.alpha)*self.getQValue(state,action) + self.alpha*sample
 
         #util.raiseNotDefined()
