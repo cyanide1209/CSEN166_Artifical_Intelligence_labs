@@ -72,7 +72,7 @@ class QLearningAgent(ReinforcementAgent):
             # update the dictionary self.qvalues with this unseen (s,a) and initialize its value as 0.0
             # self.qvalues[(s,a)]=0.0
             # return this q-value 
-            self.qvalues[(state,action): 0.0]
+            self.qvalues[(state,action)] = 0.0
             return self.qvalues[(state,action)] 
             
 
@@ -84,11 +84,15 @@ class QLearningAgent(ReinforcementAgent):
           terminal state, you should return a value of 0.0.
         """
         "*** YOUR CODE HERE ***"
+        max_val = 0.0
         for action in self.getLegalActions(state):
             if self.getQValue(state, action) == 0.0:
                 return 0.0
             else:
-                return max(self.getQValue(state, action))
+                if self.getQValue(state,action) > max_val:
+                    max_val = self.getQValue(state,action)
+                
+        return max_val
         util.raiseNotDefined()
 
     def computeActionFromQValues(self, state):
